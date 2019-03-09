@@ -1,19 +1,11 @@
-//
-//  QuestionManager.swift
-//  OpenQuizz
-//
-//  Created by Ambroise COLLON on 15/06/2017.
-//  Copyright © 2017 OpenClassrooms. All rights reserved.
-//
-
 import UIKit
 
 class QuestionManager {
     private let url = URL(string: "https://opentdb.com/api.php?amount=10&type=boolean")!
 
     static let shared = QuestionManager()
-    private init() {}
 
+    private init() {}
 
     func get(completionHandler: @escaping ([Question]) -> ()) {
         let task = URLSession.shared.dataTask(with: self.url) { (data, response, error) in
@@ -35,6 +27,7 @@ class QuestionManager {
             let results = parsedJson["results"] as? [[String: Any]] else {
                 return [Question]()
         }
+
         return getQuestionsFrom(parsedDatas: results)
     }
 
@@ -53,15 +46,14 @@ class QuestionManager {
             let answer = parsedData["correct_answer"] as? String {
             return Question(title: String(htmlEncodedString: title)!, isCorrect: (answer == "True"))
         }
+
         return Question()
     }
 }
 
 
 extension String {
-
     init?(htmlEncodedString: String) {
-
         guard let data = htmlEncodedString.data(using: .utf8) else {
             return nil
         }
@@ -77,5 +69,4 @@ extension String {
 
         self.init(attributedString.string)
     }
-    
 }

@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  OpenQuizz
-//
-//  Created by Ambroise COLLON on 27/06/2017.
-//  Copyright © 2017 OpenClassrooms. All rights reserved.
-//
-
 import UIKit
 
 class ViewController: UIViewController {
@@ -18,13 +10,12 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let name = Notification.Name(rawValue: "QuestionsLoaded")
-        NotificationCenter.default.addObserver(self, selector: #selector(questionsLoaded), name: name, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(questionsLoaded), name: Notification.Name(rawValue: "QuestionsLoaded"), object: nil)
 
         startNewGame()
 
-		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragQuestionView(_:)))
-        questionView.addGestureRecognizer(panGestureRecognizer)
+        view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(dragQuestionView(_:))))
+        questionView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(newPartyView(_:))))
     }
 
     @IBAction func didTapNewGameButton() {
@@ -47,6 +38,17 @@ class ViewController: UIViewController {
         activityIndicator.isHidden = true
         newGameButton.isHidden = false
         questionView.title = game.currentQuestion.title
+    }
+
+    @objc func newPartyView(_ sender: UILongPressGestureRecognizer) {
+        if (game.state == .ongoing || game.state == .over) {
+            switch sender.state {
+            case .ended:
+                startNewGame()
+            default:
+                break
+            }
+        }
     }
 
     @objc func dragQuestionView(_ sender: UIPanGestureRecognizer) {
@@ -123,7 +125,7 @@ class ViewController: UIViewController {
             questionView.title = "Game Over"
         }
 
-        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: [], animations: {
+        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.5, options: [], animations: {
             self.questionView.transform = .identity
         }, completion:nil)
     }

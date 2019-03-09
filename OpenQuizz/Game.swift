@@ -1,13 +1,4 @@
-//
-//  Game.swift
-//  OpenQuizz
-//
-//  Created by Ambroise COLLON on 13/06/2017.
-//  Copyright © 2017 OpenClassrooms. All rights reserved.
-//
-
 import Foundation
-
 
 class Game {
     var score = 0
@@ -42,6 +33,7 @@ class Game {
         if (currentQuestion.isCorrect && answer) || (!currentQuestion.isCorrect && !answer) {
             score += 1
         }
+
         goToNextQuestion()
     }
 
